@@ -8,8 +8,8 @@ public class mainClass {
     public static void main (String[] args) throws ExecutionException {
 
         //TODO
-        String token="your-access-token-here";
-        String id="your-id-here";
+        String token="235583922.e029fea.8f0b40ca9ab9430d8544a5b67aa0bc2d";
+        String id="235583922";
 
         newMediaGetter get=new newMediaGetter(token,id);
         final likeInfo infLik= new likeInfo(token);

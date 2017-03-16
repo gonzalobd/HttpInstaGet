@@ -120,16 +120,19 @@ public class likeInfo extends Thread{
                         }
 
                     }
-                    Thread.sleep(35000);//hay que dosificar las peticiones, instagram nos permite 5000/hora
 
 
                 }
                 catch (IOException e){
                     e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
             }
+            try {
+                Thread.sleep(35000);//hay que dosificar las peticiones, instagram nos permite 5000/hora
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
         }
         }
 }

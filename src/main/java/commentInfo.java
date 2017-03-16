@@ -75,7 +75,7 @@ public class commentInfo extends Thread{
 
                 if (!mediaList.contains(record.value())){
                     mediaList.add(record.value());
-                    //System.out.println("topic recevied" + record.value());
+                    System.out.println("topic recevied" + record.value());
                 }
             }
 
@@ -96,8 +96,10 @@ public class commentInfo extends Thread{
                     map = mapper.readValue(json, new TypeReference<Map<String, Object>>(){});
                     commentsReceived=(ArrayList<Map<String,Object>>) map.get("data");
 
-                    for (Map<String,Object> comment:commentsReceived){
+                    System.out.println(commentsReceived);
 
+
+                    for (Map<String,Object> comment:commentsReceived){
 
                         Map<String,Object> oneComment =new HashMap<String,Object>();
 
@@ -114,15 +116,18 @@ public class commentInfo extends Thread{
                         }
 
                     }
-                    Thread.sleep(35000);//hay que dosificar las peticiones, instagram nos permite 5000/hora
 
                 }
                 catch (IOException e){
                     e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
             }
+            try {
+                Thread.sleep(35000);//hay que dosificar las peticiones, instagram nos permite 5000/hora
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 }
