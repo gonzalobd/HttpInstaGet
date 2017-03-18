@@ -51,6 +51,8 @@ public class likeInfo extends Thread{
         properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
         properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
         properties.put(ConsumerConfig.GROUP_ID_CONFIG, "test-consumer-group");
+        properties.put(ConsumerConfig.AUTO_OFFSET_RESET_DOC, "smallest");
+
         return properties;
     }
 

@@ -49,6 +49,7 @@ public class commentInfo extends Thread{
         properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
         properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
         properties.put(ConsumerConfig.GROUP_ID_CONFIG, "test-consumer-group2");
+        properties.put(ConsumerConfig.AUTO_OFFSET_RESET_DOC, "smallest");
         return properties;
     }
 
@@ -75,7 +76,7 @@ public class commentInfo extends Thread{
 
                 if (!mediaList.contains(record.value())){
                     mediaList.add(record.value());
-                    System.out.println("topic recevied" + record.value());
+                    //System.out.println("topic recevied" + record.value());
                 }
             }
 
@@ -96,7 +97,6 @@ public class commentInfo extends Thread{
                     map = mapper.readValue(json, new TypeReference<Map<String, Object>>(){});
                     commentsReceived=(ArrayList<Map<String,Object>>) map.get("data");
 
-                    System.out.println(commentsReceived);
 
 
                     for (Map<String,Object> comment:commentsReceived){
