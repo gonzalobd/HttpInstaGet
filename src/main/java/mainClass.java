@@ -9,8 +9,8 @@ public class mainClass {
     public static void main (String[] args) throws ExecutionException {
 
         //TODO
-        String token="235583922.e029fea.8f0b40ca9ab9430d8544a5b67aa0bc2d";
-        String id="235583922";
+        String token="your-token-here";
+        String id="your-id-here";
         LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<String>();
         newMediaGetter get=new newMediaGetter(token,id,queue);
         likeInfo infLik= new likeInfo(token,queue);
