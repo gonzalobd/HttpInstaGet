@@ -21,12 +21,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class newMediaGetter extends Thread {
     private ArrayList<Map<String,Object>> mediaFullList;
     private static String access_token;
     private static String id;
+    LinkedBlockingQueue<String> queue;
     private ArrayList<String> mediaToSend =new ArrayList<String>();
     private static final AtomicBoolean closed = new AtomicBoolean(false);
 
@@ -41,9 +43,11 @@ public class newMediaGetter extends Thread {
 
     Producer<String, String> producer = new KafkaProducer<>(getProducerConfig());
 
-    public newMediaGetter(String acces_token, String id) throws  ExecutionException{
+    public newMediaGetter(String acces_token, String id, LinkedBlockingQueue<String> queue) throws  ExecutionException{
         this.access_token=acces_token;
         this.id=id;
+        this.queue=queue;
+
     }
 
     @Override
@@ -80,6 +84,7 @@ public class newMediaGetter extends Thread {
                     if (!mediaToSend.contains((mediaFullList.get(i)).get("id").toString())){
                     mediaToSend.add((mediaFullList.get(i)).get("id").toString());
                     producer.send(new ProducerRecord<String, String>("newMedia","media",(mediaFullList.get(i)).get("id").toString()));
+                    queue.add((mediaFullList.get(i)).get("id").toString());
                     }
                 }
 

@@ -1,9 +1,5 @@
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -14,8 +10,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
@@ -28,11 +28,14 @@ public class likeInfo extends Thread{
     private ArrayList<Map<String,Object>> likesReceived = new ArrayList<Map<String,Object>>();
     private ArrayList<Map<String,Object>> likesSent = new ArrayList<Map<String,Object>>();
     private static final AtomicBoolean closed = new AtomicBoolean(false);
+    LinkedBlockingQueue<String> queue;
 
 
 
-    public likeInfo(String acces_token) throws ExecutionException {
+
+    public likeInfo(String acces_token, LinkedBlockingQueue<String> queue) throws ExecutionException {
         this.access_token=acces_token;
+        this.queue=queue;
 
 
     }
@@ -45,18 +48,8 @@ public class likeInfo extends Thread{
         properties.put(ProducerConfig.ACKS_CONFIG, "1");
         return properties;
     }
-    private Properties getConsumerConfig() {
-        Properties properties = new Properties();
-        properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
-        properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
-        properties.put(ConsumerConfig.GROUP_ID_CONFIG, "test-consumer-group");
-        properties.put(ConsumerConfig.AUTO_OFFSET_RESET_DOC, "smallest");
 
-        return properties;
-    }
 
-    private KafkaConsumer<String, String> consumer = new KafkaConsumer<>(getConsumerConfig());
 
     private Producer<String, Map<String,Object>> producer = new KafkaProducer<>(getProducerConfig());
 
@@ -72,20 +65,20 @@ public class likeInfo extends Thread{
                 closed.set(true);
             }
         });
-        consumer.subscribe(Collections.singletonList("newMedia"));
         ArrayList<String> mediaList = new ArrayList<String>();
 
 
         while (!isInterrupted()) {
 
-            ConsumerRecords<String,String> records = consumer.poll(100);
-                for (ConsumerRecord<String,String> record : records) {
 
-                    if (!mediaList.contains(record.value())){
-                        mediaList.add(record.value());
-                        //System.out.println("topic recevied" + record.value());
-                    }
+            Object[] pics=queue.toArray();
+            //System.out.println("imagen recibida en likes:   "+pics);
+
+            for(int i=0;i<pics.length;i++) {
+                if (!mediaList.contains(pics[i])) {
+                    mediaList.add(pics[i].toString());
                 }
+            }
 
             for (int i=0;i<mediaList.size();i++){
 
