@@ -23,21 +23,19 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Created by gonzalobd on 7/03/17.
  */
-public class likeInfo extends Thread{
+public class CommentInfo extends Thread{
     private static String access_token;
-    private ArrayList<Map<String,Object>> likesReceived = new ArrayList<Map<String,Object>>();
-    private ArrayList<Map<String,Object>> likesSent = new ArrayList<Map<String,Object>>();
+    private ArrayList<Map<String,Object>> commentsReceived = new ArrayList<Map<String,Object>>();
+    private ArrayList<Map<String,Object>> commentsSent = new ArrayList<Map<String,Object>>();
     private static final AtomicBoolean closed = new AtomicBoolean(false);
     LinkedBlockingQueue<String> queue;
 
 
 
 
-    public likeInfo(String acces_token, LinkedBlockingQueue<String> queue) throws ExecutionException {
+    public CommentInfo(String acces_token, LinkedBlockingQueue<String> queue) throws ExecutionException {
         this.access_token=acces_token;
         this.queue=queue;
-
-
     }
 
     private Properties getProducerConfig() {
@@ -50,7 +48,6 @@ public class likeInfo extends Thread{
     }
 
 
-
     private Producer<String, Map<String,Object>> producer = new KafkaProducer<>(getProducerConfig());
 
     @Override
@@ -59,8 +56,6 @@ public class likeInfo extends Thread{
         Runtime.getRuntime().addShutdownHook(new Thread(){
             @Override
             public void run() {
-                likesSent.clear();
-                likesReceived.clear();
                 System.out.println("Shutting down");
                 closed.set(true);
             }
@@ -69,20 +64,19 @@ public class likeInfo extends Thread{
 
 
         while (!isInterrupted()) {
-
-
             Object[] pics=queue.toArray();
-            //System.out.println("imagen recibida en likes:   "+pics);
+            //System.out.println("images received for comment analytics:   "+pics );
 
-            for(int i=0;i<pics.length;i++) {
+            for (int i=0;i<pics.length;i++) {
                 if (!mediaList.contains(pics[i])) {
                     mediaList.add(pics[i].toString());
                 }
             }
 
+
             for (int i=0;i<mediaList.size();i++){
 
-                String stringUrl ="https://api.instagram.com/v1/media/"+mediaList.get(i)+"/likes?access_token="+access_token;
+                String stringUrl ="https://api.instagram.com/v1/media/"+mediaList.get(i)+"/comments?access_token="+access_token;
 
                 try{
 
@@ -94,28 +88,27 @@ public class likeInfo extends Thread{
                     Map<String, Object> map = new HashMap<String, Object>();
                     // convert JSON string to Map
                     map = mapper.readValue(json, new TypeReference<Map<String, Object>>(){});
-                    likesReceived=(ArrayList<Map<String,Object>>) map.get("data");
-
-                    for (Map<String,Object> like:likesReceived){
+                    commentsReceived=(ArrayList<Map<String,Object>>) map.get("data");
 
 
-                        Map<String,Object> oneLike =new HashMap<String,Object>();
 
-                        oneLike.put("username",like.get("username"));
-                        oneLike.put("media",mediaList.get(i));
+                    for (Map<String,Object> comment:commentsReceived){
 
+                        Map<String,Object> oneComment =new HashMap<String,Object>();
 
-                        if (!likesSent.contains(oneLike)){
+                        oneComment.put("username",((Map)comment.get("from")).get("username"));
+                        oneComment.put("media",mediaList.get(i));
+                        oneComment.put("text",comment.get("text"));
+                        oneComment.put("created_time",comment.get("created_time"));
 
-                            oneLike.put("timestamp",System.currentTimeMillis());
-                            producer.send(new ProducerRecord<>("like","Like", oneLike));
-                            oneLike.remove("timestamp");
-                            likesSent.add(oneLike);
+                        if (!commentsSent.contains(oneComment)){
+
+                            producer.send(new ProducerRecord<>("comment","Comment", oneComment));
+                            commentsSent.add(oneComment);
 
                         }
 
                     }
-
 
                 }
                 catch (IOException e){
@@ -129,5 +122,5 @@ public class likeInfo extends Thread{
             }
 
         }
-        }
+    }
 }

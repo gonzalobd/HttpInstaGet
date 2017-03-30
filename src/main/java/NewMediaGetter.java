@@ -24,7 +24,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class newMediaGetter extends Thread {
+public class NewMediaGetter extends Thread {
     private ArrayList<Map<String,Object>> mediaFullList;
     private static String access_token;
     private static String id;
@@ -43,7 +43,7 @@ public class newMediaGetter extends Thread {
 
     Producer<String, String> producer = new KafkaProducer<>(getProducerConfig());
 
-    public newMediaGetter(String acces_token, String id, LinkedBlockingQueue<String> queue) throws  ExecutionException{
+    public NewMediaGetter(String acces_token, String id, LinkedBlockingQueue<String> queue) throws  ExecutionException{
         this.access_token=acces_token;
         this.id=id;
         this.queue=queue;
