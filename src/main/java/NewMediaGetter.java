@@ -6,10 +6,6 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.Producer;
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.clients.producer.ProducerRecord;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,7 +15,6 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -32,16 +27,8 @@ public class NewMediaGetter extends Thread {
     private ArrayList<String> mediaToSend =new ArrayList<String>();
     private static final AtomicBoolean closed = new AtomicBoolean(false);
 
-    private Properties getProducerConfig() {
-        Properties properties = new Properties();
-        properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
-        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
-        properties.put(ProducerConfig.ACKS_CONFIG, "1");
-        return properties;
-    }
 
-    Producer<String, String> producer = new KafkaProducer<>(getProducerConfig());
+
 
     public NewMediaGetter(String acces_token, String id, LinkedBlockingQueue<String> queue) throws  ExecutionException{
         this.access_token=acces_token;
@@ -83,9 +70,12 @@ public class NewMediaGetter extends Thread {
                     //System.out.println((mediaFullList.get(i)).get("id"));
                     if (!mediaToSend.contains((mediaFullList.get(i)).get("id").toString())){
                     mediaToSend.add((mediaFullList.get(i)).get("id").toString());
-                    producer.send(new ProducerRecord<String, String>("newMedia","media",(mediaFullList.get(i)).get("id").toString()));
                     queue.add((mediaFullList.get(i)).get("id").toString());
                     }
+                }
+
+                if (queue.size()>20){
+                    queue.poll();
                 }
 
                 Thread.sleep(60000); //hay que dosificar las peticiones, instagram nos permite 5000/hora
