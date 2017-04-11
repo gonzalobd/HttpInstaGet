@@ -64,6 +64,9 @@ public class CommentInfo extends Thread{
 
 
         while (!isInterrupted()) {
+
+            if (queue.size()>20){queue.poll();}
+
             Object[] pics=queue.toArray();
             //System.out.println("images received for comment analytics:   "+pics );
 

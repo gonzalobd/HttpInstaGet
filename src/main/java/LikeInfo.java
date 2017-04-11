@@ -70,6 +70,7 @@ public class LikeInfo extends Thread{
 
         while (!isInterrupted()) {
 
+            if (queue.size()>20){queue.poll();}
 
             Object[] pics=queue.toArray();
             //System.out.println("imagen recibida en likes:   "+pics);
