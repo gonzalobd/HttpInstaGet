@@ -65,17 +65,34 @@ public class CommentInfo extends Thread{
 
         while (!isInterrupted()) {
 
-            if (queue.size()>20){queue.poll();}
 
             Object[] pics=queue.toArray();
             //System.out.println("images received for comment analytics:   "+pics );
 
-            for (int i=0;i<pics.length;i++) {
-                if (!mediaList.contains(pics[i])) {
-                    mediaList.add(pics[i].toString());
+            if (pics.length<=20) {
+
+                for (int i = 0; i < pics.length; i++) {
+                    if (!mediaList.contains(pics[i])) {
+                        mediaList.add(pics[i].toString());
+                    }
                 }
             }
 
+            //Queremos informacion solo de las 20 ultimas fotos
+            //Si ya van mas de 20 fotos hay que eliminar las mas antiguas del registro
+
+            if (pics.length>20){
+                for (int i = 0; i < pics.length; i++) {
+                    if (!mediaList.contains(pics[i])) {
+                        mediaList.add(0,pics[i].toString());
+                    }
+                }
+
+                while (mediaList.size()>20) {
+                    mediaList.remove(mediaList.size()-1);
+                }
+
+            }
 
             for (int i=0;i<mediaList.size();i++){
 

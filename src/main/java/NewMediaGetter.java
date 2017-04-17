@@ -74,9 +74,7 @@ public class NewMediaGetter extends Thread {
                     }
                 }
 
-                if (queue.size()>20){
-                    queue.poll();
-                }
+
 
                 Thread.sleep(60000); //hay que dosificar las peticiones, instagram nos permite 5000/hora
 
