@@ -1,3 +1,6 @@
+#build: $ docker build -t kafka .
+#run: $ docker run -d -p 9092:9092 -p 2181:2181  kafka
+
 FROM java:openjdk-8-jre
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -16,7 +19,7 @@ RUN apt-get update && \
     rm /tmp/kafka_"$SCALA_VERSION"-"$KAFKA_VERSION".tgz
 
 COPY entry.sh /
-COPY ../target/gonzalo-1.0-SNAPSHOT-selfcontained.jar /
+COPY gonzalo-1.0-SNAPSHOT-selfcontained.jar /
 RUN chmod +x /entry.sh
 
 ENTRYPOINT ["/entry.sh"]
