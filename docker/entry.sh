@@ -10,7 +10,7 @@ bin/kafka-topics.sh --zookeeper localhost:2181 --create --topic like \
 bin/kafka-topics.sh --zookeeper localhost:2181 --create --topic comment \
 --partitions 1 --replication-factor 1
 sleep 5
-java -jar gonzalo-1.0-SNAPSHOT-selfcontained.jar $ID&TOKEN
+#java -jar gonzalo-1.0-SNAPSHOT-selfcontained.jar $IDTOKEN
 
-#while true; do sleep 1000; done
+while true; do sleep 1000; done
 
