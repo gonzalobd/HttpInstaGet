@@ -20,7 +20,7 @@ RUN apt-get update && \
     rm /tmp/kafka_"$SCALA_VERSION"-"$KAFKA_VERSION".tgz
 
 COPY entry.sh /
-COPY gonzalo-1.0-SNAPSHOT-selfcontained.jar /
+#COPY gonzalo-1.0-SNAPSHOT-selfcontained.jar /
 RUN chmod +x /entry.sh
 
 ENTRYPOINT ["/entry.sh"]

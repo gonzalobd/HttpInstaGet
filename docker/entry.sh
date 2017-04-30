@@ -2,6 +2,7 @@
 
 cd /opt/kafka_$SCALA_VERSION-$KAFKA_VERSION
 echo advertised.listeners=PLAINTEXT://$HOST:9092 >> config/server.properties
+sed -i -e '16iexport KAFKA_HEAP_OPTS="-Xmx256M -Xms128M"\' bin/kafka-server-start.sh
 bin/zookeeper-server-start.sh -daemon config/zookeeper.properties
 bin/kafka-server-start.sh  -daemon config/server.properties
 sleep 5
