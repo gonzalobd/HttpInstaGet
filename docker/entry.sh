@@ -13,5 +13,5 @@ bin/kafka-topics.sh --zookeeper localhost:2181 --create --topic comment \
 sleep 10
 java -jar /httpInstaGet/target/gonzalo-1.0-SNAPSHOT-selfcontained.jar $ID $TOKEN
 
-while true; do sleep 1000; done
+#while true; do sleep 1000; done
 
