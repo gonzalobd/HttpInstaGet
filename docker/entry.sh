@@ -11,7 +11,7 @@ bin/kafka-topics.sh --zookeeper localhost:2181 --create --topic like \
 bin/kafka-topics.sh --zookeeper localhost:2181 --create --topic comment \
 --partitions 1 --replication-factor 1
 sleep 10
-java -jar gonzalo-1.0-SNAPSHOT-selfcontained.jar $ID $TOKEN
+java -jar /httpInstaGet/target/gonzalo-1.0-SNAPSHOT-selfcontained.jar $ID $TOKEN
 
 #while true; do sleep 1000; done
 

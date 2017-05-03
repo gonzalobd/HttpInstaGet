@@ -1,5 +1,5 @@
 # sudo docker build -t container .
-# sudo docker run -d -p 9092:9092 -e HOST=<IPpublicanodo> -e ID=<id> -e TOKEN=<token>   container
+# sudo docker run -d -p 9092:9092 -e HOST=<IPpublicaNodo> -e ID=<id> -e TOKEN=<token>   HttpInstaGet
 # sudo docker exec -ti <id> bash
 
 FROM java:openjdk-8-jre
@@ -12,12 +12,17 @@ ENV KAFKA_HOME /opt/kafka_"$SCALA_VERSION"-"$KAFKA_VERSION"
 
 # Install Kafka, Zookeeper and other needed things
 RUN apt-get update && \
-    apt-get install -y zookeeper wget supervisor dnsutils && \
+    apt-get install -y zookeeper wget supervisor dnsutils maven && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean && \
     wget -q http://apache.mirrors.spacedump.net/kafka/"$KAFKA_VERSION"/kafka_"$SCALA_VERSION"-"$KAFKA_VERSION".tgz -O /tmp/kafka_"$SCALA_VERSION"-"$KAFKA_VERSION".tgz && \
     tar xfz /tmp/kafka_"$SCALA_VERSION"-"$KAFKA_VERSION".tgz -C /opt && \
-    rm /tmp/kafka_"$SCALA_VERSION"-"$KAFKA_VERSION".tgz
+    rm /tmp/kafka_"$SCALA_VERSION"-"$KAFKA_VERSION".tgz && \
+    cd / && \
+    git clone https://github.com/gonzalobd/httpInstaGet && \
+    cd httpInstaGet && \
+    mvn clean package && \
+
 
 COPY entry.sh /
 COPY gonzalo-1.0-SNAPSHOT-selfcontained.jar /
