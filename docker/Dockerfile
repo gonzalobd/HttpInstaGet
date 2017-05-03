@@ -2,7 +2,7 @@
 # sudo docker run -d -p 9092:9092 -e HOST=<IPpublicaNodo> -e ID=<id> -e TOKEN=<token>   httpinstaget
 # sudo docker exec -ti <id> bash
 
-FROM java:openjdk-8-jre
+FROM java:openjdk-8-jdk
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV SCALA_VERSION 2.11
@@ -21,11 +21,11 @@ RUN apt-get update && \
     cd / && \
     git clone https://github.com/gonzalobd/httpInstaGet && \
     cd httpInstaGet && \
-    mvn clean package && \
+    mvn clean package
 
 
 COPY entry.sh /
-COPY gonzalo-1.0-SNAPSHOT-selfcontained.jar /
+
 RUN chmod +x /entry.sh
 
 ENTRYPOINT ["/entry.sh"]
