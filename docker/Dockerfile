@@ -1,5 +1,5 @@
-# sudo docker build -t container .
-# sudo docker run -d -p 9092:9092 -e HOST=<IPpublicaNodo> -e ID=<id> -e TOKEN=<token>   HttpInstaGet
+# sudo docker build -t httpinstaget .
+# sudo docker run -d -p 9092:9092 -e HOST=<IPpublicaNodo> -e ID=<id> -e TOKEN=<token>   httpinstaget
 # sudo docker exec -ti <id> bash
 
 FROM java:openjdk-8-jre
