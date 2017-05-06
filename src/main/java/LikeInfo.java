@@ -122,6 +122,7 @@ public class LikeInfo extends Thread{
 
                         oneLike.put("username",like.get("username"));
                         oneLike.put("media",mediaList.get(i));
+                        oneLike.put("id",like.get("id"));
 
 
                         if (!likesSent.contains(oneLike)){
