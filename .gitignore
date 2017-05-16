@@ -1,3 +1,5 @@
 /target/
 /target/classes
 /out/artifacts/httpInstaGet_jar
+/likesSent.bin
+/commentsSent.bin

@@ -1,3 +1,6 @@
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -5,9 +8,7 @@ import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -29,6 +30,9 @@ public class LikeInfo extends Thread{
     private ArrayList<Map<String,Object>> likesSent = new ArrayList<Map<String,Object>>();
     private static final AtomicBoolean closed = new AtomicBoolean(false);
     LinkedBlockingQueue<String> queue;
+    private Kryo kryo = new Kryo();
+    private Input input = null;
+    private Output output = null;
 
 
 
@@ -66,6 +70,21 @@ public class LikeInfo extends Thread{
             }
         });
         ArrayList<String> mediaList = new ArrayList<String>();
+
+        //Para guardar el estado que teniamos sobre los likes que ya han sido enviados
+        //utilizamos la serializacion de objetos java Kryo. Primero intentamos abrir
+        //el fichero con los likes enviados (si existe, si no partimos de null)
+        //Comento esta parte, ya que esto seria para producción y ahora estoy haciendo pruebas:
+
+        /**
+        try {
+            input = new Input(new FileInputStream("likesSent.bin"));
+            likesSent = kryo.readObject(input, ArrayList.class);
+            input.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("File created");
+        }
+        */
 
 
         while (!isInterrupted()) {
@@ -147,6 +166,18 @@ public class LikeInfo extends Thread{
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
+            //Como lo de guardar el estado es para produccion, comento esto:
+
+            /**
+            try {
+                output = new Output(new FileOutputStream("likesSent.bin"));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            kryo.writeObject(output, likesSent);
+            output.close();
+             */
 
         }
         }
