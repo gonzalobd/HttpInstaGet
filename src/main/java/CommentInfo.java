@@ -73,15 +73,13 @@ public class CommentInfo extends Thread{
 
         /**
          try {
-         input = new Input(new FileInputStream("commentsSent.bin"));
+         input = new Input(new FileInputStream("hdfs://path-in-hdfs/commentsSent.bin"));
          commentsSent = kryo.readObject(input, ArrayList.class);
          input.close();
          } catch (FileNotFoundException e) {
          System.out.println("File created");
          }
          */
-
-
 
 
         while (!isInterrupted()) {
@@ -166,7 +164,7 @@ public class CommentInfo extends Thread{
 
             /**
              try {
-             output = new Output(new FileOutputStream("commentssSent.bin"));
+             output = new Output(new FileOutputStream("hdfs://path-in-hdfs/commentssSent.bin"));
              } catch (FileNotFoundException e) {
              e.printStackTrace();
              }

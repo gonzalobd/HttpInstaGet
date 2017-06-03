@@ -78,7 +78,7 @@ public class LikeInfo extends Thread{
 
         /**
         try {
-            input = new Input(new FileInputStream("likesSent.bin"));
+            input = new Input(new FileInputStream("hdfs://path-in-hdfs/likesSent.bin"));
             likesSent = kryo.readObject(input, ArrayList.class);
             input.close();
         } catch (FileNotFoundException e) {
@@ -171,7 +171,7 @@ public class LikeInfo extends Thread{
 
             /**
             try {
-                output = new Output(new FileOutputStream("likesSent.bin"));
+                output = new Output(new FileOutputStream("hdfs://path-in-hdfs/likesSent.bin"));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
