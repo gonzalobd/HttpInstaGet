@@ -1,2 +1,7 @@
-# httpInstaGet
-En este primer módulo, la clase NewMediaGetter le pregunta cada minuto a la API de instagram por las ultimas 20 fotos y las mete en la cola queue. Las clases commentInfo y Like Info reciben esta cola, cogen solo las últimas 20 fotos (en el caso que haya fotos nuevas desde que se arranco el servicio) y preguntan a cada foto por sus comentarios/likes y se envian  a 2 colas kafka. Todos los comentarios/likes enviados se guardan en una lista (likeSent y CommentSent) para asegurarnos de que no son enviados de nuevo. Estas 2 listas son guardadas en disco en formato kryo, por si el servicio se cae, para que al volver a arrancar se guarde su estado.
+# HttpInstaGet
+
+This project fetch live data about likes and comments from an Instagram account to Kafka Queues. Class NewMediaGuetter is asking Instagram API about the last 20 pictures. This 20 pictures go to a queue and classes CommentInfo and LikeInfo ask for all likes/comments of those 20 pictures and send them to Kafka topics "like" and "comment"
+
+All comments and likes sent are stored in a Serialized Java Object (Kryo serialization) to don't send them again.
+
+Sorry for the comments in spanish inside the code!
